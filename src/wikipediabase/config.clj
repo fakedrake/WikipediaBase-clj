@@ -1,10 +1,10 @@
-(ns wikipedia-front.config
-  (:require [wikipedia-front.functions]
-            [wikipedia-front.api :as api])
+(ns wikipediabase.config
+  (:require [wikipediabase.functions]
+            [wikipediabase.api :as api])
   (:use [clojure.pprint :only [pprint]]))
 
 (defn- parser-sym [sym]
-  (ns-resolve 'wikipedia-front.parser sym))
+  (ns-resolve 'wikipediabase.parser sym))
 
 (defn open-paren-ptok
   "Return a list where the first element is this list and the rest is

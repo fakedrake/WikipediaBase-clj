@@ -1,6 +1,6 @@
-(ns wikipedia-front.core
+(ns wikipediabase.core
   (:require [clojure.string :as str]
-            [wikipedia-front.parser :as parser])
+            [wikipediabase.parser :as parser])
   (:use [clojure.pprint :only [pprint]]))
 
 (defn wikipediabase

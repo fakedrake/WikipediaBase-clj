@@ -1,7 +1,7 @@
-(ns wikipedia-front.parser
+(ns wikipediabase.parser
   (:require [clojure.string :as str]
-            [wikipedia-front.config :as cfg]
-            [wikipedia-front.api :as api]))
+            [wikipediabase.config :as cfg]
+            [wikipediabase.api :as api]))
 
 (declare parse-token)
 

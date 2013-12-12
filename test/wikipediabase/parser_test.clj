@@ -1,7 +1,7 @@
-(ns wikipedia-front.parser-test
+(ns wikipediabase.parser-test
   (:require [clojure.test :refer :all]
-            [wikipedia-front.parser :refer :all]
-            [wikipedia-front.config :as cfg]))
+            [wikipediabase.parser :refer :all]
+            [wikipediabase.config :as cfg]))
 
 (deftest tokenize-test
   (testing "Normal tokenizer use"

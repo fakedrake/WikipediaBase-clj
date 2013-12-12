@@ -1,4 +1,4 @@
-(ns wikipedia-front.api
+(ns wikipediabase.api
   (:use [clojure.pprint :only [pprint]]))
 
 (def wb-functions (atom {}))
@@ -20,8 +20,8 @@
   interface. Use this to avoid namespace conflicts."
   [name & fdecls]
   (let [fsym (defn-sym name fdecls)]
-    (reset! wikipedia-front.api/wb-functions
-            (assoc @wikipedia-front.api/wb-functions
+    (reset! wikipediabase.api/wb-functions
+            (assoc @wikipediabase.api/wb-functions
               (or (:cmd-name (meta name)) (str name)) fsym))
     fsym))
 
@@ -37,6 +37,6 @@
     (when (not= (type #"s") java.util.regex.Pattern)
       (wb-throw "Literal type `%s' is has not a valid regexp."))
 
-    (reset! wikipedia-front.api/wb-literals
-            (cons [rx fsym] @wikipedia-front.api/wb-literals))
+    (reset! wikipediabase.api/wb-literals
+            (cons [rx fsym] @wikipediabase.api/wb-literals))
     fsym))
