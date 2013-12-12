@@ -1,5 +1,7 @@
 (ns wikipedia-front.config
-  (:require [wikipedia-front.functions]))
+  (:require [wikipedia-front.functions]
+            [wikipedia-front.api :as api])
+  (:use [clojure.pprint :only [pprint]]))
 
 (defn- parser-sym [sym]
   (ns-resolve 'wikipedia-front.parser sym))
@@ -30,31 +32,23 @@
 
 ;; Literal Parsing
 
-(defn dec-lit
-  [l]
-  (Integer. l))
+(api/wb-defl ^{:regex #"\d+"} dec-lit
+             [l]
+             (Integer. l))
 
-(defn hex-lit
-  [l]
-  (. Integer (parseInt (subs l 2) 16)))
+(api/wb-defl ^{:regex #"0x[0-9a-fA-F]+"} hex-lit
+             [l]
+             (. Integer (parseInt (subs l 2) 16)))
 
-(defn float-lit
-  [l]
-  (Float. l))
+(api/wb-defl ^{:regex #"(\d*\.\d+\|\d+\.\d*)"} float-lit
+             [l]
+             (Float. l))
 
 
-(defn string-lit
-  [l]
-  l)
+(api/wb-defl ^{:regex #""} string-lit
+             [l]
+             l)
 
-(defn keyword-lit
-  [l]
-  (keyword (subs l 1)))
-
-;; These regexes match literals. There is also the string-lit which
-;; was processed before.
-(def literal-regex-list
-  [[#"\d+" dec-lit]
-   [#"(\d*\.\d+\|\d+\.\d*)" float-lit]
-   [#"0x[0-9a-fA-F]+" hex-lit]
-   [#":\S+" keyword-lit]])
+(api/wb-defl ^{:regex #":\w+"} keyword-lit
+             [l]
+             (keyword (subs l 1)))

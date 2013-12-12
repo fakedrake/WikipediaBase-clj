@@ -31,9 +31,10 @@
   [exp]
   (remove empty?
           (mapcat (fn [[e s]]
-                    (concat (str/split (reduce #(str/replace %1 %2 (str " " %2 " "))
-                                               (cons e (keys cfg/ptokenmap)))
-                                       #"\s+") [(if s (list cfg/string-lit s) "")]))
+                    (concat (str/split
+                             (reduce #(str/replace %1 %2 (str " " %2 " "))
+                                     (cons e (keys cfg/ptokenmap)))
+                             #"\s+") [(if s (list cfg/string-lit s) "")]))
                   (partition 2 2 [nil] (str/split exp #"\"")))))
 
 (defn pp
@@ -47,13 +48,13 @@
 
 ;; Dont return nil on failure, we might need it for a literal.
 (defn parse-literal
-  "Parse literal based on the `literal-regex-list'. Will return
-  'non-literal if it cant be resolved. Non strings are always
-  considered literals."
+  "Parse literal based on the `wb-literals'. You may define those with
+  `wb-defl'. Will return 'non-literal if it cant be resolved. Non
+  strings are always considered literals."
   [lit]
   (if (string? lit)
     (let [lt-res (some #(when (re-matches (first %) lit) (second %))
-                       cfg/literal-regex-list)]
+                       @api/wb-literals)]
       (if (fn? lt-res) (list lt-res lit)
           (or lt-res 'non-literal)))
     lit))
