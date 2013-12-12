@@ -1,4 +1,4 @@
-(ns wikipedia-front.core-test
+(ns wikipedia-front.parser-test
   (:require [clojure.test :refer :all]
             [wikipedia-front.parser :refer :all]))
 
