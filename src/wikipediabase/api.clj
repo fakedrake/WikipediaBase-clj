@@ -14,15 +14,30 @@
   [name fdecls]
   `(var-get (eval (macroexpand (list* `defn ~name ~fdecls)))))
 
+(defn register-function
+  "Register a function that the system can run."
+  [fsym name]
+  (reset! wikipediabase.api/wb-functions
+          (assoc @wikipediabase.api/wb-functions
+            (or (:cmd-name (meta name)) (str name)) fsym)))
+
+(defn register-literal
+  "Register a literal regex and a way for the parser to transform
+  it."
+  [rx fsym]
+  (when (not= (type #"s") java.util.regex.Pattern)
+    (wb-throw "Literal type `%s' is has not a valid regexp."))
+
+  (reset! wikipediabase.api/wb-literals
+          (cons [rx fsym] @wikipediabase.api/wb-literals)))
+
 (defmacro wb-defn
   "Defines a function and informs wb-functions about it. You may use
   ^{:cmd-name <name>} to define the name of the function in the
   interface. Use this to avoid namespace conflicts."
   [name & fdecls]
   (let [fsym (defn-sym name fdecls)]
-    (reset! wikipediabase.api/wb-functions
-            (assoc @wikipediabase.api/wb-functions
-              (or (:cmd-name (meta name)) (str name)) fsym))
+    (register-function fsym name)
     fsym))
 
 ;; I think this is returning a defn that returns my defn not the defn
@@ -34,9 +49,5 @@
   (let [fsym (defn-sym name fdecls)
         rx (or (:regex (meta name))
                (wb-throw "Undefined regexp for literal type `%s'." (str name)))]
-    (when (not= (type #"s") java.util.regex.Pattern)
-      (wb-throw "Literal type `%s' is has not a valid regexp."))
-
-    (reset! wikipediabase.api/wb-literals
-            (cons [rx fsym] @wikipediabase.api/wb-literals))
+    (register-literal rx fsym)
     fsym))
